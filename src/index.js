@@ -1,15 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import "semantic-ui-css/semantic.min.css";
+import SeasonDisplay from "./SeasonDisplay";
+import Spinner from "./Spinner";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    latitude: null,
+    errorMessage: "",
+  };
 
-    this.state = {
-      latitude: null,
-      errorMessage: "",
-    };
-
+  componentDidMount() {
     window.navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({ latitude: position.coords.latitude });
@@ -20,15 +21,18 @@ class App extends React.Component {
     );
   }
 
+  componentDidUpdate() {
+    console.log("I was just updated!!");
+  }
   render() {
     if (this.state.latitude && !this.state.errorMessage) {
-      return <div>Latitude: {this.state.latitude}</div>;
+      return <SeasonDisplay lat={this.state.latitude} />;
     }
 
     if (!this.state.latitude && this.state.errorMessage) {
       return <div>Error: {this.state.errorMessage}</div>;
     }
-    return <div>Loading</div>;
+    return <Spinner />;
   }
 }
 /*
